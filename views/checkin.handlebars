@@ -1,0 +1,82 @@
+<div class="row">
+  <div class="col-xm-12">
+    <h1><p class="text-center"><span class="glyphicon glyphicon-time"></span><span id="parkingtime"></span></p></h1>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-xs-12">
+    <div id="map-canvas"></div>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-xs-12">
+    <br>
+    <p class="text-center"> <a class="btn btn-lg btn-success" style="width: 100%;" href="/checkout">Check Out</a> </p>
+  </div>
+</div>
+<script type="text/javascript">
+  function initialize() {
+    var mapOptions = {
+      center: { lat: 19.410352, lng: -99.170141},
+      zoom: 19
+    };
+    var map = new google.maps.Map(document.getElementById('map-canvas'),
+        mapOptions);
+
+    // Add parking locations
+    $.ajax({
+      url: "/parkings?lat=19.410352&lon=-99.170141",
+    }).success(function(data) {
+      data.forEach(function(parking, index) {
+        var color = parking.obj.occupied ? "#FF0000" : "#00FF00";
+        var populationOptions = {
+          strokeColor: color,
+          strokeOpacity: 0.8,
+          strokeWeight: 2,
+          fillColor: color,
+          fillOpacity: 0.35,
+          map: map,
+          center: new google.maps.LatLng(parking.obj.location.coordinates[1],
+            parking.obj.location.coordinates[0]), 
+          radius: 1
+        };
+        // Add the circle for this city to the map.
+        cityCircle = new google.maps.Circle(populationOptions);            
+      });
+    });
+
+    // // Add my location
+    // if (navigator.geolocation) {
+    //   navigator.geolocation.getCurrentPosition(function  (position) {
+    //     var color = "#0000FF";
+    //     var positionOptions = {
+    //       strokeColor: color,
+    //       strokeOpacity: 0.8,
+    //       strokeWeight: 2,
+    //       fillColor: color,
+    //       fillOpacity: 0.35,
+    //       map: map,
+    //       // center: new google.maps.LatLng(position.coords.latitude, position.coords.longitude), 
+    //       center: new google.maps.LatLng(19.410360, -99.170100), 
+    //       radius: 1
+    //     };
+    //     // Add the circle for this city to the map.
+    //     positionCircle = new google.maps.Circle(positionOptions);   
+    //   });
+    // }
+  }
+  google.maps.event.addDomListener(window, 'load', initialize);
+</script>
+
+<script type="text/javascript">
+var now = Date.now();
+window.setInterval(function() {
+  var duration = Date.now() - now;
+  var seconds = Math.floor(duration/1000);
+  var minutes = Math.floor(seconds/60);
+  seconds = seconds - minutes*60;
+  $("#parkingtime").text(minutes+":"+seconds);
+}, 1000);  
+</script>
