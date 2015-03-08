@@ -3,12 +3,16 @@ var main = require('./handlers/main');
 var Parking = require('./models/parking');
 
 module.exports = function(app) {
+  app.get('/', function(req, res) {
+    res.render('index');
+  });
+
   // '/' routes
   app.get('/parkings', main.parkings);
   app.get('/parkings/checkIn', main.checkIn);
   app.get('/parkings/checkOut', main.checkOut);
 
-  
+
 
   // 500 - Server error
   app.use(function(err, req, res, next) {

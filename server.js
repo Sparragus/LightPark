@@ -21,31 +21,31 @@ mongoose.connect(config.database);
 // var parkings = [
 // {
 //   location: {coordinates:[-99.170141, 19.410352]},
-//   status: false
+//   occupied: true
 // },
 // {
 //   location: {coordinates:[ -99.170090, 19.410360]},
-//   status: false
+//   occupied: false
 // },
 // {
 //   location: {coordinates:[-99.170052, 19.410367]},
-//   status: false
+//   occupied: true
 // },
 // {
 //   location: {coordinates:[-99.170012, 19.410375]},
-//   status: false
+//   occupied: false
 // },
 // {
 //   location: {coordinates:[-99.169972, 19.410383]},
-//   status: false
+//   occupied: true
 // },
 // {
 //   location: {coordinates:[-99.169932, 19.410391]},
-//   status: false
+//   occupied: false
 // },
 // {
 //   location: {coordinates:[-99.169900, 19.410400]},
-//   status: false
+//   occupied: true
 // },
 // ];
 // Parking.create(parkings);
@@ -59,6 +59,17 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({
   extended: true
 }));
+
+// Views
+var handlebars = require('express-handlebars').create({
+  defaultLayout: 'main'
+});
+app.engine('handlebars', handlebars.engine);
+app.set('view engine', 'handlebars');
+
+// Setup static files =========================================================
+app.use(express.static(__dirname + '/public'));
+
 
 // Console logging 
 app.use(morgan('dev'));
