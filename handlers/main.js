@@ -54,7 +54,7 @@ exports.checkIn = function(req, res, next) {
   var userId = req.query.userId;
   var parkingId = req.query.parkingId;
 
-  Parking.findOne(parkingId, function(err, parking) {
+  Parking.findById(parkingId, function(err, parking) {
     if (err) {
       return next(new Error(err));
     }
@@ -65,13 +65,12 @@ exports.checkIn = function(req, res, next) {
       parking.occupied = true;
       user.atParking = parking._id;
       user.checkIn = Date.now();
+      parking.save();
       user.save(function(err) {
         if (err) {
           return next(new Error(err));
         }
-        return res.json({
-          checkIn: this.checkIn
-        });
+        return res.redirect('/checkin');
       });
     });
   });
@@ -95,11 +94,19 @@ exports.checkOut = function(req, res, next) {
         return next(new Error(err));
       }
 
+      if(!parking) return res.json({});
+
       parking.occupied = false;
       user.atParking = null;
       user.checkOut = Date.now();
 
       var durationInMinutes = (user.checkOut - user.checkIn)/1000/60;
+
+      user.checkIn = null;
+      user.checkOut = null;
+      user.save();
+      parking.save();
+
 
       return res.json({minutes: durationInMinutes});
     });
