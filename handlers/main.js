@@ -111,3 +111,39 @@ exports.checkOut = function(req, res, next) {
     });
   });
 };
+
+exports.checkOut2 = function(req, res, next) {
+  if (!req.query.userId) {
+    return res.json({
+      error: 'User is not defined.'
+    });
+  }
+
+  var userId = req.query.userId;
+
+  User.findById(userId, function(err, user) {
+    if (err) {
+      return next(new Error(err));
+    }
+    Parking.findById(user.atParking, function(err, parking) {
+      if (err) {
+        return next(new Error(err));
+      }
+
+      if(!parking) return res.json({});
+
+      parking.occupied = false;
+      user.atParking = null;
+      user.checkOut = Date.now();
+
+      var durationInMinutes = (user.checkOut - user.checkIn)/1000/60;
+
+      user.checkIn = null;
+      user.checkOut = null;
+      user.save();
+      parking.save();
+
+      return res.json({duration:(user.checkOut - user.checkIn).toFixed(2)});
+    });
+  });
+};
