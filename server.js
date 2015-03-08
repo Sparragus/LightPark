@@ -9,19 +9,21 @@ var morgan     = require('morgan');
 app.set('port', process.env.PORT || 3000);
 app.set('env', process.env.NODE_ENV || 'development');
 
+var config = require('./config');
+
 // Database
-mongoose.connect('localhost/hackcdmx');
+mongoose.connect(config.database);
 
 // Seed data
-// var Parking = require('./models/parking');
-// Parking.create({
-//   location: {coordinates:[-99.181323, 19.440478]},
-//   status: false
-// });
-// var User = require('./models/user');
-// User.create({
-  
-// });
+var Parking = require('./models/parking');
+Parking.create({
+  location: {coordinates:[-99.181323, 19.440478]},
+  status: false
+});
+var User = require('./models/user');
+User.create({
+
+});
 
 // Body Parser
 app.use(bodyParser.json());
