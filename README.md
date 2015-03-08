@@ -1,5 +1,7 @@
 # LightPark
 
+![LightPark Logo](http://i.imgur.com/SjBVlqGm.jpg)
+
 ## Descripción
 LightPark, la app que te ayuda a encontrar estacionamiento más rápido sin pagar de más. No pierdas tiempo ni dinero en aparcar.
 
