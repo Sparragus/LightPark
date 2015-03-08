@@ -10,9 +10,7 @@ module.exports = function(app) {
     res.render('checkin');
   });
 
-  app.get('/checkout', function(req, res) {
-    res.render('checkout');
-  });
+  app.get('/checkout', main.checkOut);
 
   // '/' routes
   app.get('/parkings', main.parkings);

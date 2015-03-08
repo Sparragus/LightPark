@@ -107,8 +107,7 @@ exports.checkOut = function(req, res, next) {
       user.save();
       parking.save();
 
-
-      return res.json({minutes: durationInMinutes});
+      return res.render('checkout', {minutes: durationInMinutes.toFixed(2), price: (0.25*durationInMinutes).toFixed(2)});
     });
   });
 };
