@@ -24,7 +24,7 @@ exports.parkings = function(req, res, next) {
     'type': 'Point',
     coordinates: [longitude, latitude]
   };
-  
+
   var options = {
     spherical: true,
     maxDistance: 10 / 6371, // ten kilometers
@@ -55,16 +55,53 @@ exports.checkIn = function(req, res, next) {
   var parkingId = req.query.parkingId;
 
   Parking.findOne(parkingId, function(err, parking) {
-    if (err) { return next(new Error(err)); }
+    if (err) {
+      return next(new Error(err));
+    }
     User.findById(userId, function(err, user) {
-      if (err) { return next(new Error(err)); }
+      if (err) {
+        return next(new Error(err));
+      }
+      parking.occupied = true;
       user.atParking = parking._id;
       user.checkIn = Date.now();
       user.save(function(err) {
-        if (err) { return next(new Error(err)); }
-        return res.json({checkIn: this.checkIn});
+        if (err) {
+          return next(new Error(err));
+        }
+        return res.json({
+          checkIn: this.checkIn
+        });
       });
     });
   });
+};
 
+exports.checkOut = function(req, res, next) {
+  if (!req.query.userId) {
+    return res.json({
+      error: 'User is not defined.'
+    });
+  }
+
+  var userId = req.query.userId;
+
+  User.findById(userId, function(err, user) {
+    if (err) {
+      return next(new Error(err));
+    }
+    Parking.findById(user.atParking, function(err, parking) {
+      if (err) {
+        return next(new Error(err));
+      }
+
+      parking.occupied = false;
+      user.atParking = null;
+      user.checkOut = Date.now();
+
+      var durationInMinutes = (user.checkOut - user.checkIn)/1000/60;
+
+      return res.json({minutes: durationInMinutes});
+    });
+  });
 };

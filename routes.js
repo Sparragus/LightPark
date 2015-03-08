@@ -6,7 +6,7 @@ module.exports = function(app) {
   // '/' routes
   app.get('/parkings', main.parkings);
   app.get('/parkings/checkIn', main.checkIn);
-  // app.get('/parkings/checkOut', main.checkOut);
+  app.get('/parkings/checkOut', main.checkOut);
 
   // 500 - Server error
   app.use(function(err, req, res, next) {
