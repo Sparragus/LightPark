@@ -8,6 +8,8 @@ module.exports = function(app) {
   app.get('/parkings/checkIn', main.checkIn);
   app.get('/parkings/checkOut', main.checkOut);
 
+  
+
   // 500 - Server error
   app.use(function(err, req, res, next) {
     console.error(err.stack);
